@@ -37,10 +37,42 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
+function convertZeroOneInDotDash(sequence) {
+    let arrayPairs = [];
+    let result;
+
+    for(let i = 0; i < sequence.length; i += 2) {
+        arrayPairs.push(sequence.substr(i,2));
+    }
+
+    result = arrayPairs
+        .filter(pair => (pair === '10' || pair === '11') ? true : false)
+        .map( pair => (pair === '10') ? '.' : '-' );
+
+    return result.join('');
+}
+
 function decode(expr) {
-    // write your solution here
+    let arraySubstrings = [];
+    let arrayMorse;
+    let arrayLetters;
+
+    for(let i = 0; i < expr.length; i += 10) {
+        arraySubstrings.push(expr.substr(i,10));
+    }
+    
+    arrayMorse = arraySubstrings.map(group => {
+        if(group === '**********') return ' ';
+
+        return convertZeroOneInDotDash(group);
+    });
+
+    arrayLetters = arrayMorse.map(key => (key === ' ') ? key : MORSE_TABLE[key]);
+
+    return arrayLetters.join('');
 }
 
 module.exports = {
     decode
 }
+
